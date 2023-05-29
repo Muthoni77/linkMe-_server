@@ -2,12 +2,12 @@ import Africastalking from "africastalking";
 
 const sendMessage = async (req, res) => {
   try {
+    //validate phone and message, make sure we are getting them
     const { phone, message } = req.body;
-
     //initialize
     const africastalking = Africastalking({
-      apiKey: "your api key",
-      username: "your user name",
+      apiKey: "your api key",//put in env
+      username: "your user name",//put in env
     });
     const result = await africastalking.SMS.send({
       to: phone,
