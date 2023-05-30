@@ -1,5 +1,6 @@
 import Express from "express";
 import messagesRoutes from "./routes/message/MessageRoute.js";
+import user_router from "./routes/message/user.js";
 const app = Express();
 
 //middleware to parse json
@@ -11,6 +12,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/message", messagesRoutes);
+app.use("/message/user", user_router);
 
 app.listen(4000, (req, res) => {
   console.log(`Server is running on port 4000`);
