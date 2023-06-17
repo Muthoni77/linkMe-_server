@@ -6,12 +6,13 @@ const sendMessage = async (req, res) => {
     const { phone, message } = req.body;
     //initialize
     const africastalking = Africastalking({
-      apiKey: "your api key",//put in env
-      username: "your user name",//put in env
+      apiKey:
+        "f5d4fb86358c4ef7fdfe18191a961b1263d7def6ca652bd706a83ad89860ad1c", //put in env
+      username: "Ateller", //put in env
     });
     const result = await africastalking.SMS.send({
       to: phone,
-      message: message, 
+      message: message,
     });
 
     console.log("result");
