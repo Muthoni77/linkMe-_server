@@ -3,11 +3,10 @@ import Jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { config } from "dotenv";
 
-    export const register = async (req, res) => {
-
+export const register = async (req, res) => {
   try {
     const { name, email, password, phone } = req.body;
-   
+
     const user = await User.findOne(email);
     if (user) {
       return res
@@ -29,18 +28,14 @@ import { config } from "dotenv";
     const token = Jwt.sign({ data: new_user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: "User created",
-        data: { user: new_user, token },
-      });
+    return res.status(200).json({
+      success: true,
+      message: "User created",
+      data: { user: new_user, token },
+    });
   } catch (error) {
     return res
       .status(500)
       .json({ success: false, message: error.message, data: null });
   }
 };
-
-
