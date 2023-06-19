@@ -2,6 +2,7 @@ import User from "../models/user.js";
 import Jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { config } from "dotenv";
+import { sendWelcomeEmail } from "../utils/sendEmail.js";
 
 config();
 
@@ -31,6 +32,10 @@ export const register = async (req, res) => {
       expiresIn: "1h",
     });
     //send user welcome email
+    const isEmailSent = await sendWelcomeEmail(email);
+    if (!isEmailSent) {
+      console.log("Failed to send welcome email");
+    }
     return res.status(200).json({
       success: true,
       message: "User created",
