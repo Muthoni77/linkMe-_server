@@ -3,6 +3,8 @@ import Jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { config } from "dotenv";
 
+config();
+
 export const register = async (req, res) => {
   try {
     const { username, email, password, phone } = req.body;
@@ -39,3 +41,40 @@ export const register = async (req, res) => {
       .json({ success: false, message: error.message, data: null });
   }
 };
+
+export const login = async (req, res )=>{
+try {
+  const { email, password } = req.body;
+  //validate
+  if (!email || !password) {
+    return res.status(400).json({
+      success: false,
+      message: "please provide email and password",
+      data: null,
+    });
+  }
+  //find if user exists
+  const user = await User.findOne({ email: email });
+  if (!user) {
+    return res.status(400).json({
+      success: false,
+      message: "User does not exist, please insert the correct email",
+      data: null,
+    });
+  }
+  const password_match = await bcrypt.compare(password, user.password);
+      const saltRounds = 10;
+      bcrypt.hash("secret", saltRounds);
+  if (!password_match) {
+    return res.status(400).json({
+      success: false,
+      message: "Incorrect password",
+      data: null,
+    });
+  }
+   return user;
+   
+} catch (error) {
+  console.log(error.message)
+}
+}
