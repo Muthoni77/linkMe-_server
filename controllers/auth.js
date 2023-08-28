@@ -28,9 +28,15 @@ export const register = async (req, res) => {
         .status(400)
         .json({ success: false, message: "user not created", data: null });
     }
+
+    //Generate access token
     const token = Jwt.sign({ data: new_user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
+
+    //Generate refresh token
+    const refreshToken=Jwt.sign({data:new_user._id},process.env.REFRESH_TOKEN_SECRET,{expiresIn:"30d"});
+    
     //send user welcome email
     const isEmailSent = await sendWelcomeEmail(email);
     if (!isEmailSent) {
@@ -39,7 +45,7 @@ export const register = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "User created",
-      data: { user: new_user, token },
+      data: { user: new_user, token,refreshToken },
     });
   } catch (error) {
     return res
@@ -68,9 +74,8 @@ export const login = async (req, res) => {
         data: null,
       });
     }
+
     const password_match = await bcrypt.compare(password, user.password);
-    const saltRounds = 10;
-    bcrypt.hash("secret", saltRounds);
     if (!password_match) {
       return res.status(400).json({
         success: false,
@@ -78,7 +83,19 @@ export const login = async (req, res) => {
         data: null,
       });
     }
-    return user;
+    //Generate access token
+    const token = Jwt.sign({ data:user._id }, process.env.JWT_SECRET, {
+      expiresIn: "30s",
+    });
+
+    //Generate refresh token
+    const refreshToken = Jwt.sign(
+      { data: user._id },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: "30d" }
+    );
+    
+    return res.status(200).json({ user,token,refreshToken });
   } catch (error) {
     console.log(error.message);
   }
