@@ -1,6 +1,7 @@
 import Express from "express";
 import messagesRoutes from "./routes/message/MessageRoute.js";
 import authRoutes from "./routes/auth/authRoute.js";
+import productRoutes from "./routes/products/productRoute.js"
 import { connectToDB } from "./config/db.js";
 import mongoose from "mongoose";
 import { config } from "dotenv";
@@ -21,6 +22,7 @@ app.get("/", (req, res) => {
 
 app.use("/auth", authRoutes);
 app.use("/message", messagesRoutes);
+app.use("/products",productRoutes);
 
 mongoose.connection.on("open", () => {
   console.log("Connected to mongo db");
